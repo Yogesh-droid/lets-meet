@@ -1,23 +1,20 @@
 import 'dart:io';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lets_meet_demo1/profile.dart';
 import 'package:lets_meet_demo1/profile_details.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-import 'Data.dart';
-
-Future<void> main() async {
+Future<void> main()async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MaterialApp(
-    home: MyApp(),
+      home: MyApp()
   ));
 }
-
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -48,7 +45,7 @@ class MyApp extends StatelessWidget {
       ),
       body: ExampleHomePage(),
       bottomNavigationBar: CurvedNavigationBar(
-        color: Colors.transparent,
+        //color: ,
         backgroundColor: Colors.transparent,
         buttonBackgroundColor: Colors.white,
         height: 70.0,
@@ -97,7 +94,24 @@ class ExampleHomePage extends StatefulWidget {
 
 class _ExampleHomePageState extends State<ExampleHomePage>
     with TickerProviderStateMixin {
-  AnimationController _controller;
+  AnimationController controller;
+  Animation colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 3));
+    colorAnimation =
+        ColorTween(begin: Colors.blue, end: Colors.yellow).animate(controller);
+    controller.addListener(() {
+      setState(() {});
+    });
+    controller.repeat();
+    controller.repeat(reverse: true);
+  }
+
+
   final Color color1 = Color(0xffFC5CF0);
   final Color color2 = Color(0xffFE8852);
   List<String> welcomeImages = [
@@ -129,45 +143,11 @@ class _ExampleHomePageState extends State<ExampleHomePage>
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 10),
-      vsync: this,
-    )..repeat();
-  }
-
-  Animatable<Color> background = TweenSequence<Color>([
-    TweenSequenceItem(
-      weight: 1.0,
-      tween: ColorTween(
-        begin: Colors.red,
-        end: Colors.green,
-      ),
-    ),
-    TweenSequenceItem(
-      weight: 1.0,
-      tween: ColorTween(
-        begin: Colors.green,
-        end: Colors.blue,
-      ),
-    ),
-    TweenSequenceItem(
-      weight: 1.0,
-      tween: ColorTween(
-        begin: Colors.blue,
-        end: Colors.pink,
-      ),
-    ),
-  ]);
-
-  @override
   Widget build(BuildContext context) {
     CardController controller; //Use this to trigger swap.
     return Container(
-      color:background
-          .evaluate(AlwaysStoppedAnimation(_controller.value)) ,
-        /*decoration: BoxDecoration(
+        color: colorAnimation.value,
+       /* decoration: BoxDecoration(
             //borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0)),
             gradient: LinearGradient(
                 colors: [color1, color2],
@@ -175,15 +155,15 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 end: Alignment.bottomRight)),*/
         child: Container(
             // height: MediaQuery.of(context).size.height * .8,
-            height: MediaQuery.of(context).size.height * .8,
-            margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 100.0),
+            //height: MediaQuery.of(context).size.height ,
+            //margin: const EdgeInsets.only(left: 20.0, right: 20.0, top: 100.0),
             child: TinderSwapCard(
-              orientation: AmassOrientation.BOTTOM,
+              orientation: AmassOrientation.LEFT,
               totalNum: 8,
               //stackNum: 6,
               //swipeEdge: 10.0,
-              maxWidth: MediaQuery.of(context).size.width * 0.9,
-              //maxHeight: MediaQuery.of(context).size.width * 0.9,
+              maxWidth: MediaQuery.of(context).size.width * 1.07,
+              //maxHeight: MediaQuery.of(context).size.width* 0.9,
               maxHeight: 700,
               minWidth: MediaQuery.of(context).size.width * 0.8,
               minHeight: MediaQuery.of(context).size.width * 0.8,
@@ -195,7 +175,9 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                       child: Image.asset(
                         '${welcomeImages[index]}',
                         fit: BoxFit.fill,
-                        height: 700,
+                        //height: 700,
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
                       ),
                       onTap: () {
                         Navigator.push(

@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:lets_meet_demo1/profile.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -105,7 +107,7 @@ class DisplayPictureScreen extends StatelessWidget {
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(File(imagePath));
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     taskSnapshot.ref.getDownloadURL().then(
-          (value) => print("Done: $value"),
+          (value) =>FirebaseDatabase.instance.reference().child('imgURL').push().set(value)
     );
   }
   }

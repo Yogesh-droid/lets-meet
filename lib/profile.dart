@@ -1,9 +1,23 @@
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'CameraPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_ui/firebase_auth_ui.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+class Profile extends StatefulWidget {
+  final String url;
 
-class Profile extends StatelessWidget {
+  const Profile({Key key, this.url}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  DatabaseReference mRef=FirebaseDatabase.instance.reference().child('imgURL');
+  List<String>list=[];
   @override
   Widget build(BuildContext context) {
     final Color color1 = Color(0xffFC5CF0);
@@ -41,16 +55,25 @@ class Profile extends StatelessWidget {
                       Container(
                         height: double.infinity,
                         margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
-                            child: ClipRRect(
+                            child:ClipRRect(
                                 borderRadius: BorderRadius.circular(30.0),
-                                child: Image(image: AssetImage('images/img2.jpg'))),
+                              child:StreamBuilder(
+                                  stream:mRef.onValue,
+                                  builder: (context,AsyncSnapshot <Event> snapshot){
+                                        DataSnapshot dataSnapshot=snapshot.data.snapshot;
+                                        Map<dynamic, dynamic> values = dataSnapshot.value;
+                                        values.forEach((key, values) {
+                                          list.add(values);
+                                        });
+                                        return Image.network(list[0]);
+                                  },),
                       ),
-                    ],
+                      )],
                   ),
                 ),
                 SizedBox(height: 10.0),
                 Text(
-                  "Nisha - 22",
+                  "xyz",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 ),
                 Row(
@@ -159,7 +182,6 @@ class Profile extends StatelessWidget {
               ),
               IconButton(
                 icon: Icon(Icons.menu),
-                onPressed: () {},
               ),
             ],
           ),
