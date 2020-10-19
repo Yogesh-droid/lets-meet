@@ -56,6 +56,14 @@ class _AuthenticationState extends State<Authentication> {
                   onPressed: _onActionTappedPhone,
                 ),
               ),
+              Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 10),
+              child: RaisedButton(
+                child: Text('login with Facebook'),
+                onPressed: _onActionTappedPhone,
+              ),
+              ),
+
               _getErrorText(),
               _user != null
                   ? /*FlatButton(
@@ -158,7 +166,8 @@ class _AuthenticationState extends State<Authentication> {
       // User is null, initiate auth
       FirebaseAuthUi.instance().launchAuth([
         //AuthProvider.email(),
-        AuthProvider.phone()
+        AuthProvider.phone(),
+        AuthProvider.facebook()
       ]).then((firebaseUser) {
         setState(() {
           _error = "";

@@ -57,7 +57,7 @@ class _ProfileState extends State<Profile> {
                         margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
                             child:ClipRRect(
                                 borderRadius: BorderRadius.circular(30.0),
-                              child:StreamBuilder(
+                              child: StreamBuilder(
                                   stream:mRef.onValue,
                                   builder: (context,AsyncSnapshot <Event> snapshot){
                                         DataSnapshot dataSnapshot=snapshot.data.snapshot;
